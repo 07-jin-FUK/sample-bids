@@ -1,0 +1,25 @@
+.flexbox {
+  display: flex;
+}
+.align-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.text-bold {
+  font-weight: bold;
+}
+.text-underline {
+  text-decoration: underline;
+}
+.mt25, .mb25, .pt25, .pb25 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+.wrap-90 {
+  width: 90%;
+  margin: auto;
+}

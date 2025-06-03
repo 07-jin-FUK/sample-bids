@@ -1,0 +1,28 @@
+input[type='text'],
+input[type='email'],
+input[type='password'],
+textarea {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #aaa;
+  background-color: transparent;
+  font-size: 0.9em;
+  outline: none;
+}
+
+.form {
+  .form-content {
+    margin-bottom: 15px;
+
+    .label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.8em;
+    }
+  }
+}
