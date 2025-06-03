@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <h1>Dirwings 入札システム</h1>
+    <h1>入札システム</h1>
   </header>
 </template>
 

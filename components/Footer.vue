@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p>&copy; 2025 Dirwings All rights reserved.</p>
+    <p>&copy; 2025  All rights reserved.</p>
   </footer>
 </template>
 
