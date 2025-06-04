@@ -1,8 +1,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+      <Sidebar />
     <main class="main">
-      <NuxtLink to="/customer" class="back-to-mypage">← マイページへ戻る</NuxtLink>
       <h2>落札案件一覧</h2>
 
       <table class="bid-table">

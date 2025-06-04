@@ -2,8 +2,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+      <Sidebar />
     <main class="main">
-      <NuxtLink to="/customer" class="back-to-mypage">← マイページへ戻る</NuxtLink>
       <h2 class="title">過去の入札履歴</h2>
 
       <table class="history-table" v-if="bidHistory.length">

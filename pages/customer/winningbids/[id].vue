@@ -1,8 +1,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+      <Sidebar />
     <main class="main">
-      <NuxtLink to="/customer/winningbids" class="back-to-list">← 一覧へ戻る</NuxtLink>
       <h2 class="title">落札案件詳細（ID: {{ bidId }}）</h2>
 
       <template v-if="bid">

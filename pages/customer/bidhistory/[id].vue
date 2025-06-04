@@ -2,8 +2,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+      <Sidebar />
     <main class="main">
-      <NuxtLink to="/customer/bidhistory" class="back-to-list">← 履歴一覧へ戻る</NuxtLink>
       <h2 class="title">入札履歴詳細（ID: {{ bidId }}）</h2>
 
       <template v-if="bid">

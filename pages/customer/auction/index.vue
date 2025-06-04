@@ -1,8 +1,8 @@
 <template>
+
+
   <div class="page-wrap">
-    <Header />
     <main class="main">
-              <NuxtLink to="/customer" class="back-to-mypage">← マイページへ戻る</NuxtLink>
 
       <h2 class="title">入札会一覧</h2>
 
@@ -35,7 +35,6 @@
       </table>
 
     </main>
-    <Footer />
   </div>
 </template>
 

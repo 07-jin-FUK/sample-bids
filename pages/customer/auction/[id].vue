@@ -1,6 +1,7 @@
 <template>
   <div class="page-wrap">
     <Header />
+          <Sidebar />
     <main class="main">
       <h2 class="title">入札会詳細（ID: {{ id }}）</h2>
 
@@ -83,15 +84,13 @@
   <div class="modal-content">
     <h3>入札送信が完了しました。</h3>
     <div class="modal-buttons">
-      <NuxtLink to="/customer/auction" class="button-link">他の入札会を見にいく</NuxtLink>
+      <NuxtLink to="/customer/" class="button-link">他の入札会を見にいく</NuxtLink>
       <button @click="editAgain" class="edit-button">今の入札状況を編集する</button>
     </div>
   </div>
 </div>
 
 
-
-      <NuxtLink to="/customer/auction" class="back-button">← 一覧に戻る</NuxtLink>
     </main>
     <Footer />
   </div>
@@ -256,11 +255,7 @@ function editAgain() {
   color: #fff;
   float: right;
 }
-.back-button {
-  display: inline-block;
-  margin-top: 40px;
-  color: #007bff;
-}
+
 
 .button-link {
   display: inline-block;

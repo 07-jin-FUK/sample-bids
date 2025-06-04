@@ -2,16 +2,8 @@
   <div class="page-wrap">
     <Header />
     <main class="main">
-      <h2 class="title-bottom">新規会員登録</h2>
+      <h2 class="title-bottom">仮登録</h2>
       <form class="form" @submit.prevent="handleRegister">
-        <div class="form-content">
-          <label class="label" for="name">氏名</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
-                <div class="form-content">
-          <label class="label" for="name">企業名</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
         <div class="form-content">
           <label class="label" for="email">メールアドレス</label>
           <input type="email" id="email" v-model="email" required />
@@ -20,39 +12,56 @@
           <label class="label" for="password">パスワード</label>
           <input type="password" id="password" v-model="password" required />
         </div>
-
-                <div class="form-content">
-          <label class="label" for="name">その他商談の上期間システムの企業情報項目を追加していく</label>
-          <input type="text" id="name" v-model="name" required />
-        </div>
-                <div class="button-wrap">
-          <button type="submit" class="button">登録する</button>
+        <div class="button-wrap">
+          <button type="submit" class="button">仮登録する</button>
         </div>
       </form>
+
       <NuxtLink to="/" class="sub-link">トップページへ戻る</NuxtLink>
-<NuxtLink to="/auth/login" class="sub-link">ログイン画面へ戻る</NuxtLink>
+      <NuxtLink to="/auth/login" class="sub-link">ログイン画面へ戻る</NuxtLink>
     </main>
+
+    <!-- モーダル -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <p>
+          仮登録処理をさせていただきました。<br />
+          ご入力いただいたメールアドレス宛に<br />
+          数日以内にご案内をお送りいたします。<br />
+          今しばらくお待ちくださいませ。
+        </p>
+      </div>
+    </div>
+
     <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Header from '~/components/Header.vue'
 import Footer from '~/components/Footer.vue'
 
-const name = ref('')
 const email = ref('')
 const password = ref('')
+const showModal = ref(false)
+const router = useRouter()
 
 const handleRegister = () => {
-  console.log('登録処理（仮）', name.value, email.value, password.value)
+  console.log('仮登録処理（仮）', email.value, password.value)
+  showModal.value = true
+
+  setTimeout(() => {
+    showModal.value = false
+    router.push('/auth/RealRegister')
+  }, 3000) // 3秒後に遷移
 }
 </script>
 
 <style scoped>
-.title-bottom{
-    margin-bottom: 50px;
+.title-bottom {
+  margin-bottom: 50px;
 }
 
 .page-wrap {
@@ -112,4 +121,27 @@ input {
   text-decoration: underline;
 }
 
+/* モーダルスタイル */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  line-height: 1.6;
+}
 </style>

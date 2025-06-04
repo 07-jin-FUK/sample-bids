@@ -1,8 +1,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+      <Sidebar />
     <main class="main">
-              <NuxtLink to="/customer" class="back-to-mypage">← マイページへ戻る</NuxtLink>
 
       <h2 class="title">プロフィール編集</h2>
 

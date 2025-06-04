@@ -2,9 +2,8 @@
 <template>
   <div class="page-wrap">
     <Header />
+       <Sidebar />
     <main class="main">
-                      <NuxtLink to="/customer" class="back-to-mypage">← マイページへ戻る</NuxtLink>
-
       <h2 class="title">入札詳細（ID: {{ bidId }}）</h2>
       <template v-if="bid">
         <h3>{{ bid.title }}</h3>
@@ -31,8 +30,6 @@
         </table>
       </template>
       <p v-else>該当する入札情報が見つかりません。</p>
-                  <NuxtLink to="/customer/biddingprogress" class="back-button">← 一覧に戻る</NuxtLink>
-
     </main>
     <Footer />
   </div>
