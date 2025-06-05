@@ -5,12 +5,8 @@
       <h2 class="title-bottom">本会員登録</h2>
       <form class="form" @submit.prevent="handleSubmit">
         <div class="form-content">
-          <label class="label">名称</label>
+          <label class="label">会社名</label>
           <input type="text" v-model="name" required />
-        </div>
-        <div class="form-content">
-          <label class="label">カナ</label>
-          <input type="text" v-model="kana" required />
         </div>
         <div class="form-content">
           <label class="label">郵便番号</label>
@@ -25,47 +21,18 @@
           <input type="tel" v-model="phone" required />
         </div>
         <div class="form-content">
-          <label class="label">FAX番号</label>
-          <input type="tel" v-model="fax" />
+          <label class="label">部署名</label>
+          <input type="tel" v-model="department" />
         </div>
-        <div class="form-content">
-          <label class="label">請求書は必要ですか？</label>
-          <div>
-            <label><input type="radio" value="yes" v-model="needsInvoice" /> 必要</label>
-            <label><input type="radio" value="no" v-model="needsInvoice" /> 不要</label>
-          </div>
+             <div class="form-content">
+          <label class="label">担当者名</label>
+          <input type="text" v-model="contact" required />
+        </div>
+             <div class="form-content">
+          <label class="label">役職</label>
+          <input type="text" v-model="job" required />
         </div>
 
-        <template v-if="needsInvoice === 'yes'">
-          <div class="form-content">
-            <label class="label">請求書郵便番号</label>
-            <input type="text" v-model="invoiceZipcode" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書住所</label>
-            <input type="text" v-model="invoiceAddress" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書部署</label>
-            <input type="text" v-model="invoiceDepartment" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書電話番号</label>
-            <input type="tel" v-model="invoicePhone" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書FAX番号</label>
-            <input type="tel" v-model="invoiceFax" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書担当者</label>
-            <input type="text" v-model="invoicePerson" />
-          </div>
-          <div class="form-content">
-            <label class="label">請求書敬称</label>
-            <input type="text" v-model="invoiceTitle" />
-          </div>
-        </template>
 
         <div class="button-wrap">
           <button type="submit" class="button">本登録を送信する</button>

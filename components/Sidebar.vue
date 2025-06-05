@@ -1,5 +1,6 @@
 <template>
-  <aside class="sidebar" :class="{ collapsed: isCollapsed }">
+    <div>
+  <aside class="sidebar" :class="{ collapsed: isCollapsed }" @mouseenter="hoverExpand" @mouseleave="hoverCollapse">
     <nav>
       <ul>
         <li><NuxtLink to="/customer/">入札会一覧</NuxtLink></li>
@@ -10,8 +11,9 @@
         <li><a href="#" @click.prevent="handleLogout">ログアウト</a></li>
       </ul>
     </nav>
-    <button class="toggle-btn" @click="toggleSidebar">☰</button>
   </aside>
+      <button class="toggle-btn" @click="toggleSidebar">↔︎</button>
+</div>
 </template>
 
 <script setup>
@@ -23,6 +25,16 @@ const router = useRouter()
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
+}
+
+const hoverExpand = () => {
+  if (isCollapsed.value) {
+    document.querySelector('.sidebar').classList.add('hover-expand')
+  }
+}
+
+const hoverCollapse = () => {
+  document.querySelector('.sidebar').classList.remove('hover-expand')
 }
 
 const handleLogout = () => {
@@ -44,7 +56,7 @@ const handleLogout = () => {
 }
 
 .sidebar.collapsed {
-  width: 60px;
+  width: 0px;
 }
 
 .sidebar ul {
@@ -72,14 +84,20 @@ const handleLogout = () => {
   color: #eee;
   border-radius: 0; /* 角丸不要なら0でもOK */
 }
+/* トグルボタン */
 .toggle-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  background: #333;
-  color: white;
-  border: none;
+  position: fixed;
+  top: 56px;
+  left: 220px; /* 通常時の位置 */
+  background: #fff;
+  color: #333;
   padding: 5px 10px;
-  cursor: pointer;
+  z-index: 1100;
+  font-size: 1.5em;
+  transition: left 0.3s ease;
+}
+
+.sidebar.collapsed + .toggle-btn {
+  left: 0px; /* サイドバーが閉じたときの位置 */
 }
 </style>
