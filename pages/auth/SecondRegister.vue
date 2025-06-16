@@ -2,7 +2,9 @@
   <div class="page-wrap">
     <Header />
     <main class="main">
-      <h2 class="title-bottom">本会員登録</h2>
+        <div class="resistation-form">
+      <h2 class="title-bottom">アカウント登録</h2>
+      <p class="sub-title-bottom">下記情報を入力してください。</p>
       <form class="form" @submit.prevent="handleSubmit">
         <div class="form-content">
           <label class="label">会社名</label>
@@ -21,24 +23,27 @@
           <input type="tel" v-model="phone" required />
         </div>
         <div class="form-content">
-          <label class="label">部署名</label>
-          <input type="tel" v-model="department" />
-        </div>
-             <div class="form-content">
-          <label class="label">担当者名</label>
+          <label class="label">ご担当者</label>
           <input type="text" v-model="contact" required />
         </div>
              <div class="form-content">
           <label class="label">役職</label>
           <input type="text" v-model="job" required />
         </div>
+        <div class="form-content">
+          <label class="label">部署名</label>
+          <input type="tel" v-model="department" />
+        </div>
+        <div class="form-content">
+          <label class="label">メールアドレス</label>
+          <input type="email" v-model="email" required />
+        </div>
 
-
-        <div class="button-wrap">
-          <button type="submit" class="button">本登録を送信する</button>
+        <div class="button-center">
+          <button type="submit" class="button">ログイン</button>
         </div>
       </form>
-      <NuxtLink to="/" class="sub-link">トップページへ戻る</NuxtLink>
+      </div>
     </main>
 
     <div v-if="showModal" class="modal-overlay">
@@ -106,53 +111,80 @@ const handleSubmit = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .title-bottom {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  letter-spacing: 0.6px;
+  font-size: 1.25em;
+}
+
+.sub-title-bottom {
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: normal;
+  letter-spacing: 0.6px;
+  font-size: 0.875em;
 }
 
 .page-wrap {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-image: 
+  linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+  url('/images/img-auth-common-use.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .main {
-  flex: 1;
-  padding: 40px;
-  max-width: 500px;
-  margin: auto;
+display: flex;
+justify-content: center;
+margin:  150px auto;
+}
+
+.resistation-form{
+      width: 380px;
+  height: 700px;
+  background-color: #fff;
+  padding: 50px 60px;
 }
 
 .form-content {
   margin-bottom: 20px;
 }
 
-.label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-}
+
 
 input {
-  width: 100%;
-  padding: 10px 15px;
+  width: 92%;
+  padding: 2.5px 15px;
   font-size: 1em;
-  border: 1px solid #aaa;
-  border-radius: 4px;
+  border: 1px solid #707070;
+  border-radius: 5px;
 }
 
 .button-wrap {
   text-align: center;
 }
 
-.button {
-  padding: 12px 24px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.button-center{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+button {
+    text-align: center;
+    font-size: 0.75em;
+    color: #fff;
+    background-color: #000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    letter-spacing: 0.36px;
+    line-height: 1;
+  }
 }
 
 .button:hover {

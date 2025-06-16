@@ -44,7 +44,7 @@ const handleLogout = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .sidebar {
   background-color: #333;
   color: #fff;

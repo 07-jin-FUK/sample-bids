@@ -4,6 +4,11 @@
     <div class="dashboard-layout">
       <Sidebar />
       <main class="main-content">
+        <br>
+          <p>受け取りたい情報</p>
+                    <p>ユーザーの参加できる【全ての】入札会の情報</p>
+                    <p>フロント側ではジャンルごとにソートできるよう調整予定</p>
+
         <AuctionIndex />
       </main>
     </div>

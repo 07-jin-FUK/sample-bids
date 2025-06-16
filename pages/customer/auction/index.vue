@@ -5,23 +5,28 @@
     <main class="main">
 
       <h2 class="title">入札会一覧</h2>
+    
 
       <table class="bids-table">
         <thead>
           <tr>
-            <th>入札ID</th>
-            <th>タイトル</th>
-            <th>開催日</th>
-            <th>参加締切</th>
-            <th>状態</th>
+            <th></th>
+            <th>主催</th>
+            <th>カテゴリー</th>
+            <th>タイプ</th>
+            <th>入札会名称</th>
+            <th>入札期間</th>
+             <th>状態</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="bid in mockBids" :key="bid.id">
             <td>{{ bid.id }}</td>
-            <td>{{ bid.title }}</td>
+            <td>{{ bid.host }}</td>
+            <td>{{ bid.category }}</td>
+            <td>{{ bid.type }}</td>
+            <td>{{ bid.name }}</td>
             <td>{{ bid.date }}</td>
-            <td>{{ bid.deadline }}</td>
             <td>
               <div v-if="bid.status === '募集中'">
                 <NuxtLink :to="`/customer/auction/${bid.id}`" class="join-button">参加する</NuxtLink>
@@ -46,10 +51,12 @@ import Footer from '~/components/Footer.vue'
 const mockBids = [
   {
     id: 101,
-    title: '2025年6月度 電子機器入札会',
-    date: '2025-06-10',
-    deadline: '2025-06-08',
-    status: '募集中'
+    host:'日本--',
+    category: 'T&M(先頭個品NO)',
+    type: '複数品',
+    name: '2504入札会',
+    date: '2025-04-17 09:00:00～ 2025-04-30 17:00:00',
+        status: '募集中'
   },
   {
     id: 102,

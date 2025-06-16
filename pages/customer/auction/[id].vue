@@ -3,6 +3,9 @@
     <Header />
           <Sidebar />
     <main class="main">
+        <p></p>
+        
+        
       <h2 class="title">入札会詳細（ID: {{ id }}）</h2>
 
       <section class="auction-detail">
