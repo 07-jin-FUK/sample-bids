@@ -10,5 +10,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div></div> <!-- 画面に何も表示しないでOK -->
+  <div></div> 
 </template>

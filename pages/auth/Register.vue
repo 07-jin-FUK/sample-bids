@@ -125,7 +125,7 @@ const handleRegister = () => {
 
   setTimeout(() => {
     showModal.value = false;
-    router.push("/auth/secondregister");
+    router.push("/auth/activate/dummytoken123");
   }, 3000); // 3秒後に遷移
 };
 </script>
