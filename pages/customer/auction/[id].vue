@@ -171,7 +171,7 @@ function editAgain() {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .main {
   padding: 40px;
   max-width: 1000px;

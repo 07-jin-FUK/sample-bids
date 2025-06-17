@@ -25,7 +25,7 @@ import { ref } from 'vue'
 const userName = ref('フラッグ') // 本番はログイン情報から取得
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .page-wrap {
   display: flex;
   flex-direction: column;

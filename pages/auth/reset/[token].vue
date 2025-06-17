@@ -50,7 +50,6 @@ const handleReset = async () => {
 </script>
 
 <style scoped lang="scss">
-@import '~/assets/scss/variables'; // 任意で調整
 
 .main {
   display: flex;

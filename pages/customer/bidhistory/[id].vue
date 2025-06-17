@@ -81,7 +81,7 @@ const bidHistory = [
 const bid = computed(() => bidHistory.find(b => b.id === bidId))
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .page-wrap {
   display: flex;
   flex-direction: column;

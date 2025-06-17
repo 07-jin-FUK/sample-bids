@@ -61,7 +61,7 @@ const handleSubmit = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .page-wrap {
   display: flex;
   flex-direction: column;
