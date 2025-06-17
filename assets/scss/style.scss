@@ -1,7 +1,7 @@
-@use 'reset';
-@use 'mixin';
-@use 'utility';
-@use 'form';
+@use '@/assets/scss/reset';
+@use '@/assets/scss/form';
+@use '@/assets/scss/mixin';
+@use '@/assets/scss/utility';
 
 body {
 font-family: hiragino-kaku-gothic-pron, sans-serif;
