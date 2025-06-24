@@ -1,6 +1,18 @@
 <template>
   <header class="header">
     <h1>日本中古計測器</h1>
+    
+        <!-- ログイン中（customer以降）に表示するアイコン -->
+    <div v-if="isCustomerPage" class="header-icons">
+      <NuxtLink to="/customer/notification">
+        <IconNotification />
+      </NuxtLink>
+      <NuxtLink to="/customer/profileedit">
+        <IconUser />
+      </NuxtLink>
+    </div>
+    
+    
     <div class="header-right">
       <NuxtLink v-if="showLoginButton" to="/auth/login" class="login-button">ログイン</NuxtLink>
     </div>
@@ -12,6 +24,8 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
+import IconUser from '~/components/icons/IconUser.vue'      // 任意のユーザーアイコン
+import IconNotification from '~/components/icons/IconNotification.vue'
 
 const route = useRoute()
 
@@ -25,6 +39,9 @@ const showLoginButton = [
 const showRegisterButton = [
   '/auth/login',
 ].includes(route.path)
+
+// customer以降のページだったらアイコンを表示
+const isCustomerPage = route.path.startsWith('/customer')
 
 </script>
 
@@ -64,6 +81,27 @@ const showRegisterButton = [
       border-radius: 5px;
       text-decoration: none;
       font-size: 0.875em;
+    }
+  }
+  
+  .header-icons {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+
+      svg {
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 }

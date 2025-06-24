@@ -91,13 +91,21 @@ const bidHistory = [
 
 .history-table th,
 .history-table td {
-  padding: 12px;
-  border: 1px solid #ccc;
-  text-align: center;
+  border: 0.3px solid #707070;
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1;
+  padding: 10px 15px ;
+    font-size: 0.875em;
+}
+
+.history-table td {
+color: #1F1F1F;
 }
 
 .history-table th {
-  background-color: #f5f5f5;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .history-table tr:hover {

@@ -35,10 +35,12 @@ const router = useRouter() // 追加
 const email = ref('')
 const password = ref('')
 
+
 const handleLogin = () => {
-  console.log('ログイン処理（仮）', email.value, password.value)
-  router.push('/customer') 
-  }
+  // ダミーのトークンを作成
+  const dummyToken = 'abc123token'
+  router.push(`/auth/reset/${dummyToken}`)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,305 +1,261 @@
 <template>
   <div class="page-wrap">
     <Header />
-          <Sidebar />
+    <Sidebar />
     <main class="main">
-        <p></p>
-        
-        
       <h2 class="title">入札会詳細（ID: {{ id }}）</h2>
 
-      <section class="auction-detail">
-        <h3>{{ auction.title }}</h3>
-        <p><strong>開催日:</strong> {{ auction.date }}</p>
-        <p><strong>締切日:</strong> {{ auction.deadline }}</p>
-        <p><strong>概要:</strong> {{ auction.description }}</p>
-      </section>
-
-      <!-- 入札入力表 -->
-      <section class="bid-table-section">
-        <h3>入札アイテム一覧</h3>
-        <table class="bid-table">
+      <!-- 入札アイテム表 -->
+      <section>
+        <table class="bids-table">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>アイテム名</th>
-              <th>説明</th>
-              <th>入札金額（円）</th>
-              <th>備考</th>
+            <tr class="bg-black text-white text-sm">
+              <th>No.</th>
+              <th>リスト番号</th>
+              <th>商品番号</th>
+              <th>出品名</th>
+              <th>最低入札額（円）</th>
+              <th>入札額（円）</th>
+              <th>数量</th>
+              <th>希望数量</th>
+              <th>入札備考</th>
+              <th>写真情報</th>
+              <th>明細へ</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in auction.items" :key="item.id">
-              <td>{{ item.id }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.description }}</td>
+            <tr v-for="(item, idx) in auction.items" :key="item.id" class="border-b hover:bg-gray-50">
+              <td class="text-center">{{ String(idx + 1).padStart(4, "0") }}</td>
+              <td>{{ item.listNo }}</td>
+              <td>{{ String(item.caseNo).padStart(5, "0") }}-{{ String(idx + 1).padStart(4, "0") }}</td>
+              <td>{{ item.maker }}｜{{ item.model }}</td>
+              <td class="text-right">{{ item.minPrice.toLocaleString() }}</td>
               <td>
-                <input type="number" v-model="item.bidPrice" class="bid-input" />
+                <input type="number" v-model.number="item.bidPrice" class="w-full border border-gray-400 rounded px-2 py-1 text-right" min="0" />
               </td>
+              <td class="text-right">{{ item.qty }}</td>
               <td>
-                <input type="text" v-model="item.memo" class="memo-input" />
+                <input type="number" v-model.number="item.desiredQty" class="w-full border border-gray-400 rounded px-2 py-1 text-right" :max="item.qty" min="0" />
+              </td>
+              <td class="py-2 px-3">
+                <input type="text" v-model="item.memo" class="w-full border border-gray-400 rounded px-2 py-1" placeholder="備考を入力" />
+              </td>
+              <td class="py-2 px-3 text-center">
+  <button class="photo-button" @click="showPhoto(item.imageUrl)">写真を見る</button>
+</td>
+              <td class="py-2 px-3 text-center">
+                <NuxtLink :to="`/customer/auction/${id}-detail?item=${item.id}`" class="details-link">明細へ</NuxtLink>
               </td>
             </tr>
           </tbody>
         </table>
-        <p v-if="attention" class="attention">{{ attention }}</p>
-<button
-  class="submit-button"
-  :disabled="!isSubmittable"
-  :class="{ disabled: !isSubmittable }"
-  @click="handleSubmit"
->
-  まとめて送信
-</button>
       </section>
+      <section style="margin-top: 30px; margin-left: 120px;">
+  <button @click="submitBids" class="submit-button">入札を確定する</button>
+</section>
 
-      <!-- 確認モーダル -->
-      <div class="modal" v-if="showModal">
-        <div class="modal-content">
-          <h3>以下の内容で入札しますか？</h3>
-          <table class="bid-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>アイテム名</th>
-                <th>入札金額（円）</th>
-                <th>備考</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in submittedBids" :key="item.id">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.bidPrice }}</td>
-                <td>{{ item.memo }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="modal-buttons">
-            <button @click="confirmSubmit" class="confirm-button">確定</button>
-            <button @click="closeModal" class="cancel-button">入力し直す</button>
-          </div>
-        </div>
-      </div>
-
-<!-- 完了モーダル -->
-<div class="modal" v-if="showComplete">
+    </main>
+  </div>
+  
+  <!-- モーダル -->
+<div v-if="photoModal" class="modal-overlay" @click.self="closePhoto">
   <div class="modal-content">
-    <h3>入札送信が完了しました。</h3>
-    <div class="modal-buttons">
-      <NuxtLink to="/customer/" class="button-link">他の入札会を見にいく</NuxtLink>
-      <button @click="editAgain" class="edit-button">今の入札状況を編集する</button>
-    </div>
+    <img :src="photoUrl" alt="商品画像" />
+    <button @click="closePhoto">閉じる</button>
   </div>
 </div>
 
-
-    </main>
-    <Footer />
-  </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
+import { reactive } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
-const id = route.params.id
-
-const showModal = ref(false)
-const showComplete = ref(false)
-const submittedBids = ref([])
+const route = useRoute();
+const id = route.params.id;
 
 const auction = reactive({
   id,
-  title: '2025年6月度 電子機器入札会',
-  date: '2025-06-10',
-  deadline: '2025-06-08',
-  description: '法人・個人向けの電子機器入札会です。',
   items: [
-    { id: 1, name: '業務用プリンター', description: '高速プリンター', bidPrice: '', memo: '' },
-    { id: 2, name: 'プロジェクター', description: '会議室用', bidPrice: '', memo: '' },
-    { id: 3, name: 'IP電話機', description: 'クラウド対応電話', bidPrice: '', memo: '' }
-  ]
-})
+    {
+      id: 1,
+      listNo: "1",
+      caseNo: "07334",
+      name: "DTV MULTI SIGNAL GENERATOR （BS信号発生器）",
+      maker: "営電",
+      model: "MSR3100A",
+      minPrice: 0,
+      bidPrice: null,
+      qty: 10,
+      desiredQty: null,
+      memo: "",
+       imageUrl: "/images/photo1.jpg",
+    },
+    {
+      id: 2,
+      listNo: "2",
+      caseNo: "07334",
+      name: "スペクトラムアナライザ",
+      maker: "アドバンテスト",
+      model: "R3267",
+      minPrice: 1000,
+      bidPrice: null,
+      qty: 5,
+      desiredQty: null,
+      memo: "",
+      imageUrl: "/images/photo1.jpg",
+    },
+  ],
+});
 
-function openModal() {
-  submittedBids.value = auction.items.filter(i => i.bidPrice !== '' && Number(i.bidPrice) > 0)
-  if (submittedBids.value.length > 0) {
-    showModal.value = true
-  }
+const detailLink = (item) => `/customer/auction/${id}/item/${item.id}`;
+
+const submitBids = () => {
+  const payload = auction.items.map(item => ({
+    id: item.id,
+    bidPrice: item.bidPrice,
+    desiredQty: item.desiredQty,
+    memo: item.memo,
+  }))
+
+  // ここでAPIに送る（仮で表示）
+  console.log('送信データ:', payload)
+
+  // 実際のAPI送信は例↓
+  // await $fetch('/api/submit-bids', {
+  //   method: 'POST',
+  //   body: payload,
+  // })
+
+  alert('入札を送信しました！')
 }
 
-function closeModal() {
-  showModal.value = false
+const photoModal = ref(false)
+const photoUrl = ref('')
+
+const showPhoto = (url) => {
+  photoUrl.value = url
+  photoModal.value = true
 }
 
-function confirmSubmit() {
-  showModal.value = false
-  showComplete.value = true
-  // ★ ここでAPI送信処理を入れることも可
+const closePhoto = () => {
+  photoModal.value = false
+  photoUrl.value = ''
 }
-
-function closeComplete() {
-  showComplete.value = false
-}
-
-const isSubmittable = computed(() =>
-  auction.items.some(item => item.bidPrice !== '' && Number(item.bidPrice) > 0)
-)
-
-const attention = ref('')
-
-function handleSubmit() {
-  const valid = auction.items.some(item => item.bidPrice !== '' && Number(item.bidPrice) > 0)
-  if (!valid) {
-    attention.value = '最低でも1つは入札金額を入力してください。'
-    return
-  }
-  submittedBids.value = auction.items.filter(item => item.bidPrice !== '' && Number(item.bidPrice) > 0)
-  attention.value = ''
-  showModal.value = true
-}
-
-function editAgain() {
-  showComplete.value = false
-}
-
 
 
 </script>
 
 <style scoped lang="scss">
 .main {
-  padding: 40px;
-  max-width: 1000px;
+  flex: 1;
   margin: auto;
 }
+
 .title {
-  text-align: center;
-  margin-bottom: 30px;
+  margin: 85px 0 50px;
+  text-align: left;
+  font-weight: normal;
+  font-size: 0.875em;
+  margin-left: 120px;
 }
-.auction-detail {
-  margin-bottom: 40px;
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-}
-.bid-table {
+
+.bids-table {
   width: 100%;
+  margin-left: 120px;
   border-collapse: collapse;
   background: #fff;
-  margin-bottom: 20px;
+
+  th,
+  td {
+    border: 0.3px solid #707070;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1;
+    padding: 10px 15px;
+    font-size: 0.875em;
+  }
+
+  td {
+    color: #1f1f1f;
+  }
+
+  th {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  input[type="number"],
+  input[type="text"] {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    font-size: 0.9em;
+    box-sizing: border-box;
+    max-width: 100px;
+  }
+
+  .details-link {
+background-color: #000000;
+padding: 5px 7px ;
+color: #ffffff;
+border-radius: 7px;
+font-size: 0.857em;
+  }
 }
-.bid-table th,
-.bid-table td {
-  padding: 12px;
-  border: 1px solid #ccc;
-  text-align: left;
-}
-.bid-input,
-.memo-input {
-  width: 100%;
-  padding: 6px 10px;
-  box-sizing: border-box;
-  border: 1px solid #999;
-  border-radius: 4px;
-}
+
 .submit-button {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: #fff;
+  background-color: #000000;
+  color: white;
+  padding: 10px 25px;
+  font-size: 0.875em;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #1f1f1f;
+  }
 }
-.modal {
+
+.photo-button {
+background-color: #000000;
+padding: 5px 7px ;
+color: #ffffff;
+border-radius: 7px;
+font-size: 0.857em;
+line-height: 1;
+}
+
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 9999;
 }
 .modal-content {
   background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-}
-.modal-buttons {
-  margin-top: 20px;
-  text-align: right;
-}
-.confirm-button,
-.cancel-button,
-.close-button {
-  padding: 8px 16px;
-  margin-left: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.confirm-button {
-  background-color: #007bff;
-  color: #fff;
-}
-.cancel-button {
-  background-color: #ccc;
-}
-.close-button {
-  background-color: #28a745;
-  color: #fff;
-  float: right;
-}
-
-
-.button-link {
-  display: inline-block;
-  padding: 10px 16px;
-  margin: 10px 5px 0 0;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 14px;
+  padding: 20px;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
   text-align: center;
-  line-height: 1;
-  box-sizing: border-box;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
+}
+.modal-content img {
+  max-width: 100%;
+  max-height: 80vh;
 }
 
-.edit-button {
-  display: inline-block;
-  padding: 10px 16px;
-  margin: 10px 5px 0 0;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 14px;
-  text-align: center;
-  line-height: 1;
-  box-sizing: border-box;
-  cursor: pointer;
-  background-color: #6c757d;
-  color: white;
-}
-.submit-button.disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.attention {
-  color: red;
-  margin-top: 10px;
-  font-weight: bold;
-}
 
 </style>

@@ -15,6 +15,10 @@
             <label class="label" for="newPassword">新しいパスワード</label>
             <input type="password" id="newPassword" v-model="newPassword" required />
           </div>
+          <div class="form-content">
+            <label class="label" for="newPassword">確認用</label>
+        <input type="password" v-model="confirmPassword" required />
+          </div>
 
           <div class="button-center">
             <button type="submit" class="button">再設定する</button>

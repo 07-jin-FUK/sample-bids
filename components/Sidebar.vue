@@ -4,10 +4,14 @@
     <nav>
       <ul>
         <li><NuxtLink to="/customer/">入札会一覧</NuxtLink></li>
-        <li><NuxtLink to="/customer/biddingprogress">入札参加途中一覧</NuxtLink></li>
-        <li><NuxtLink to="/customer/winningbids">落札案件一覧</NuxtLink></li>
-        <li><NuxtLink to="/customer/bidhistory">入札履歴</NuxtLink></li>
-        <li><NuxtLink to="/customer/profileedit">プロフィール編集</NuxtLink></li>
+         <li><NuxtLink to="/customer/winningbids">落札履歴</NuxtLink></li>
+        <li><NuxtLink to="/customer/biddingprogress">参加中入札会</NuxtLink></li>
+        <li><NuxtLink to="/customer/check">チェックした入札会</NuxtLink></li>
+        <!-- <li><NuxtLink to="/customer/bidhistory">入札履歴</NuxtLink></li> -->
+        <li><NuxtLink to="/customer/profileedit">アカウント情報</NuxtLink></li>
+        <li><NuxtLink to="/customer/billing">ご請求内容一覧</NuxtLink></li>
+
+        
         <li><a href="#" @click.prevent="handleLogout">ログアウト</a></li>
       </ul>
     </nav>
@@ -46,17 +50,23 @@ const handleLogout = () => {
 
 <style lang="scss" scoped>
 .sidebar {
-  background-color: #333;
+  background-color: #000000;
   color: #fff;
   width: 220px;
-
   height: 100vh;
   position: fixed;
+  top:80px;
   transition: width 0.3s ease;
 }
 
 .sidebar.collapsed {
-  width: 0px;
+  width: 30px; 
+  overflow: hidden;
+
+  a {
+    font-size: 0.7em; // 小さくする
+    padding: 12px 5px;
+  }
 }
 
 .sidebar ul {
@@ -74,6 +84,7 @@ const handleLogout = () => {
   display: block;
   padding: 16px;
   text-align: center;
+  font-size: 0.9375em;
   color: #fff;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -84,10 +95,10 @@ const handleLogout = () => {
   color: #eee;
   border-radius: 0; /* 角丸不要なら0でもOK */
 }
-/* トグルボタン */
+
 .toggle-btn {
   position: fixed;
-  top: 56px;
+  top: 80px;
   left: 220px; /* 通常時の位置 */
   background: #fff;
   color: #333;
@@ -98,6 +109,6 @@ const handleLogout = () => {
 }
 
 .sidebar.collapsed + .toggle-btn {
-  left: 0px; /* サイドバーが閉じたときの位置 */
+  left: 30px;
 }
 </style>

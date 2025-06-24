@@ -5,7 +5,7 @@
     <main class="main">
       <h2>落札案件一覧</h2>
 
-      <table class="bid-table">
+      <table class="bids-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -64,21 +64,33 @@ const winningBids = [
   margin: auto;
 }
 
-.bid-table {
+.bids-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 30px;
 }
 
-.bid-table th,
-.bid-table td {
-  border: 1px solid #ccc;
-  padding: 12px;
+.bids-table th,
+.bids-table td {
+  border: 0.3px solid #707070;
   text-align: left;
+  vertical-align: middle;
+  line-height: 1;
+  padding: 10px 15px ;
+    font-size: 0.875em;
 }
 
-.bid-table th {
-  background-color: #f0f0f0;
+.bids-table td {
+color: #1F1F1F;
+}
+
+.bids-table th {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.bids-table tr:hover {
+  background-color: #f0f8ff;
 }
 
 .link-button {
