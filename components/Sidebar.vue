@@ -4,7 +4,8 @@
     <nav>
       <ul>
         <li><NuxtLink to="/customer/">入札会一覧</NuxtLink></li>
-         <li><NuxtLink to="/customer/winningbids">落札履歴</NuxtLink></li>
+         <li><NuxtLink to="/customer/bidhistory">落札履歴</NuxtLink></li>
+        <li><NuxtLink to="/customer/winningbids">仮落札中入札会</NuxtLink></li>
         <li><NuxtLink to="/customer/biddingprogress">参加中入札会</NuxtLink></li>
         <li><NuxtLink to="/customer/check">チェックした入札会</NuxtLink></li>
         <!-- <li><NuxtLink to="/customer/bidhistory">入札履歴</NuxtLink></li> -->

@@ -3,20 +3,12 @@
     <main class="main">
       <h2 class="title">初期設定のお客様はタイプCの入札会に参加することはできます。</h2>
 
-
-
       <div class="sort-buttons">
         <button :class="{ active: currentFilter === 'all' }" @click="setFilter('all')">全て見る</button>
         <button :class="{ active: currentFilter === '電気計測器' }" @click="setFilter('電気計測器')">電気計測器</button>
         <button :class="{ active: currentFilter === '分析機器' }" @click="setFilter('分析機器')">分析機器</button>
         <button :class="{ active: currentFilter === 'OAその他' }" @click="setFilter('OAその他')">OAその他</button>
       </div>
-      
-           <button
-  class="submit-button"
-  @click="submitChecked"
-  v-if="isAnyChecked"
->チェックした入札会へ登録する</button>
 
       <table class="bids-table">
 <thead>
@@ -24,6 +16,8 @@
 <th>
   <span class="checkmark-indicator">✓</span>
 </th>
+    <th>状態</th>
+    <th>入札方法</th>
     <th>案件番号</th>
     <th>カテゴリー</th>
     <th>入札会名称</th>
@@ -41,13 +35,15 @@
     <span class="checkmark">✓</span>
   </label>
 </td>
+    <td>{{ bid.status }}</td>
+    <td>{{ bid.method }}</td>
     <td>{{ bid.projectId }}</td>
     <td>{{ bid.category }}</td>
     <td>{{ bid.name }}</td>
-    <td>{{ formatStartDate(bid.date) }}</td>
-    <td>{{ formatEndDate(bid.date) }}</td>
+<td>{{ bid.startDate }}</td>
+<td>{{ bid.endDate }}</td>
     <td>
-              <div v-if="bid.status === '詳細'">
+              <div v-if="bid.details === '詳細'">
                 <NuxtLink :to="`/customer/auction/${bid.id}`" class="join-button">詳細</NuxtLink>
               </div>
               <div class="else-type" v-else>
@@ -76,29 +72,38 @@ const setFilter = (category) => {
 const mockBids = ref([
   {
     id: 101,
-        projectId: '07334',
+    status: '準備中',
+    method: '一括入札',
+    projectId: '07334',
     category: "電気計測器",
     type: "複数品",
     name: "2504入札会",
-    date: "2025年07月10日 09:00～ 2025年07月30日 17:00",
-    status: "準備中",
+    startDate: "2025年07月10日 09:00",
+    endDate: "2025年07月30日 17:00",
+    details: "準備中",
   },
   {
     id: 102,
-        projectId: '07332',
+    status: '開催中',
+    method: '個別入札',
+    projectId: '07332',
     category: "OAその他",
     type: "単品",
     name: "12台 ICP発行分析装置 ICP-OESシステム(VDV仕様)5100 Agilent",
-    date: "2025年06月10日 09:00～ 2025年06月30日 17:00",
-    status: "詳細",
+    startDate: "2025年06月10日 09:00",
+    endDate: "2025年06月30日 17:00",
+    details: "詳細",
   },
   {
     id: 103,
-        projectId: '07330',
+    status: '開催中',
+    method: '個別入札',
+    projectId: '07330',
     category: "分析機器",
     name: "分析系入札会",
-    date: "2025年04月17日 09:00～ 2025年04月30日 17:00",
-    status: "詳細",
+    startDate: "2025年04月17日 09:00",
+    endDate: "2025年04月30日 17:00",
+    details: "詳細",
   },
 ]);
 
@@ -107,40 +112,21 @@ const filteredBids = computed(() => {
   return mockBids.value.filter((bid) => bid.category === currentFilter.value);
 });
 
-const formatStartDate = (fullDate) => {
-  return fullDate.split('～')[0].trim()
-}
+import { watch } from 'vue'
 
-const formatEndDate = (fullDate) => {
-  return fullDate.split('～')[1]?.trim() || ''
-}
-
-const isAnyChecked = computed(() => {
-  return mockBids.value.some((bid) => bid.checked)
-})
-
-const submitChecked = async () => {
-  const selected = mockBids.value.filter((bid) => bid.checked)
-
-  if (selected.length === 0) {
-    alert('1件以上選択してください')
-    return
-  }
-
-  const payload = selected.map(bid => ({ projectId: bid.projectId }))
-
-  try {
-    await $fetch('/api/customer/check', {
-      method: 'POST',
-      body: payload,
+// チェック状態の変化を監視
+watch(
+  () => mockBids.value.map(bid => bid.checked),
+  (newVals, oldVals) => {
+    newVals.forEach((newVal, idx) => {
+      if (newVal !== oldVals[idx]) {
+        const bid = mockBids.value[idx]
+        console.log(`【モック送信】${bid.projectId} を ${newVal ? '登録' : '解除'}しました`)
+      }
     })
-
-    alert('送信が完了しました')
-  } catch (e) {
-    console.error(e)
-    alert('送信エラーが発生しました')
-  }
-}
+  },
+  { deep: true }
+)
 
 </script>
 
@@ -273,24 +259,4 @@ font-size: 0.857em;
     opacity: 1;
   }
 }
-
-.submit-button {
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  background: #000;
-  color: #fff;
-  font-size: 0.875em;
-  cursor: pointer;
-      margin-left: 120px;
-
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-
-
-
-
 </style>

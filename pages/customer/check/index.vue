@@ -32,8 +32,8 @@
             <td>{{ bid.projectId }}</td>
             <td>{{ bid.category }}</td>
             <td>{{ bid.name }}</td>
-            <td>{{ formatStartDate(bid.date) }}</td>
-            <td>{{ formatEndDate(bid.date) }}</td>
+<td>{{ bid.startDate }}</td>
+<td>{{ bid.endDate }}</td>
             <td>
               <NuxtLink :to="`/customer/auction/${bid.id}`" class="join-button">
                 詳細
@@ -43,23 +43,6 @@
         </tbody>
       </table>
 
-      <p v-else class="no-data">
-        現在、チェック済みの入札会はありません。
-      </p>
-
-      <!-- “チェックを外す” ボタン -->
-      <button
-        v-if="isAnyUnchecked"
-        class="remove-button"
-        @click="submitUnchecked"
-      >
-        チェックを外す
-      </button>
-
-      <!-- 完了メッセージ -->
-      <p v-if="showComplete" class="complete-msg">
-        チェックを外しました
-      </p>
     </main>
   </div>
 </template>
@@ -75,7 +58,8 @@ const mockCheckedBids = ref([
     projectId: '07334',
     category: '電気計測器',
     name: '2504入札会',
-    date: '2025年07月10日 09:00～ 2025年07月30日 17:00',
+    startDate: "2025年04月17日 09:00",
+    endDate: "2025年04月30日 17:00",
     checked: true,
   },
   {
@@ -83,39 +67,31 @@ const mockCheckedBids = ref([
     projectId: '07332',
     category: 'OAその他',
     name: 'ICP-OESシステム 5100 Agilent',
-    date: '2025年06月10日 09:00～ 2025年06月30日 17:00',
+        startDate: "2025年04月17日 09:00",
+    endDate: "2025年04月30日 17:00",
     checked: true,
   },
 ])
 
 const checkedList = mockCheckedBids
+import { watch } from 'vue'
 
-const isAnyUnchecked = computed(() =>
-  checkedList.value.some((bid) => !bid.checked)
+watch(
+  () => mockCheckedBids.value.map(b => b.checked),
+  (newVals, oldVals) => {
+    const updated = mockCheckedBids.value.filter((b, i) => !newVals[i] && oldVals[i])
+    if (updated.length > 0) {
+      if (!confirm('チェックを外すとリストから除外されます。よろしいですか？')) return
+      mockCheckedBids.value = mockCheckedBids.value.filter(b => b.checked)
+    }
+  },
+  { deep: true }
 )
 
 const formatStartDate = (d) => d.split('～')[0].trim()
 const formatEndDate = (d) => d.split('～')[1]?.trim() ?? ''
 
-const showComplete = ref(false)
 
-const submitUnchecked = async () => {
-  const toRemove = checkedList.value.filter((b) => !b.checked)
-  if (!toRemove.length) return
-
-  try {
-    await $fetch('/api/customer/uncheck', {
-      method: 'POST',
-      body: toRemove.map((b) => ({ projectId: b.projectId })),
-    })
-    checkedList.value = checkedList.value.filter((b) => b.checked)
-    showComplete.value = true
-    setTimeout(() => (showComplete.value = false), 3000)
-  } catch (e) {
-    console.error(e)
-    alert('通信エラーが発生しました')
-  }
-}
 </script>
 
 <style scoped lang="scss">

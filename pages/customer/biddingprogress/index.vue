@@ -3,59 +3,34 @@
     <Header />
     <Sidebar />
     <main class="main">
-
-      <!-- 仮落札案件 -->
-      <section class="section-block">
-        <h2 class="title">仮落札一覧</h2>
-        <table class="bids-table" v-if="temporaryWinningList.length">
-          <thead>
-            <tr>
-              <th>案件ID</th>
-              <th>タイトル</th>
-              <th>締切日時</th>
-              <th>現在の状況</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="bid in temporaryWinningList" :key="bid.id">
-              <td>{{ bid.id }}</td>
-              <td>{{ bid.title }}</td>
-              <td>{{ bid.deadline }}</td>
-              <td>
-                <NuxtLink :to="`/customer/biddingprogress/${bid.id}`" class="link-button">詳細へ</NuxtLink>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-else class="no-data">仮落札案件はありません。</p>
-      </section>
-
-      <!-- 入札期間中 -->
       <section class="section-block">
         <h2 class="title">入札期間中の参加中入札会</h2>
         <table class="bids-table" v-if="openBiddingList.length">
           <thead>
             <tr>
-              <th>案件ID</th>
-              <th>タイトル</th>
+              <th>案件番号</th>
+              <th>カテゴリー</th>
+              <th>入札会名称</th>
               <th>締切日時</th>
+              <th>入札件数</th>
               <th>現在の状況</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="bid in openBiddingList" :key="bid.id">
-              <td>{{ bid.id }}</td>
+              <td>{{ bid.projectId }}</td>
+    <td>{{ bid.category }}</td>
               <td>{{ bid.title }}</td>
-              <td>{{ bid.deadline }}</td>
+              <td>{{ bid.endDate }}</td>
+              <td>{{ bid.items.filter(item => item.bidPrice).length }} / {{ bid.items.length }} 件</td>
               <td>
-                <NuxtLink :to="`/customer/biddingprogress/${bid.id}`" class="link-button">詳細へ</NuxtLink>
+                <NuxtLink :to="`/customer/auction/${bid.id}`" class="link-button">詳細へ</NuxtLink>
               </td>
             </tr>
           </tbody>
         </table>
         <p v-else class="no-data">現在、進行中の入札はありません。</p>
       </section>
-
     </main>
     <Footer />
   </div>
@@ -68,27 +43,35 @@ import Footer from '~/components/Footer.vue'
 const allBids = [
   {
     id: 301,
+    projectId:'07334',
+    category: "電気計測器",
     title: '6月度 建材入札',
-    deadline: '2025-06-15 17:00',
-    status: '入札中'
+    endDate: "2025年07月30日 17:00",
+    items: [
+      { id: 1, bidPrice: null },
+      { id: 2, bidPrice: 1000 },
+      { id: 3, bidPrice: 1000 },
+      { id: 4, bidPrice: 1000 },
+      { id: 5, bidPrice: 1000 },
+      { id: 6, bidPrice: 1000 },
+    ]
   },
   {
     id: 302,
+    projectId:'07335',
+    category: "電気計測器",
     title: '7月度 電設資材入札',
-    deadline: '2025-07-10 12:00',
-    status: '仮落札'
-  },
-  {
-    id: 303,
-    title: '8月度 試験用案件',
-    deadline: '2025-08-01 09:00',
-    status: '入札中'
+    endDate: "2025年07月30日 17:00",
+    items: [
+      { id: 1, bidPrice: null },
+      { id: 2, bidPrice: 500 },
+    ]
   }
 ]
 
-// フィルター
-const temporaryWinningList = allBids.filter(bid => bid.status === '仮落札')
-const openBiddingList = allBids.filter(bid => bid.status === '入札中')
+const openBiddingList = allBids.filter(bid =>
+  bid.items?.some(item => item.bidPrice !== null && item.bidPrice !== '')
+)
 </script>
 
 <style scoped lang="scss">
@@ -110,10 +93,9 @@ const openBiddingList = allBids.filter(bid => bid.status === '入札中')
 }
 
 .title {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-align: left;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 0.875em;
 }
 
 .bids-table {

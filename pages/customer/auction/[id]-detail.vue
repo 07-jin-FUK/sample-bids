@@ -12,37 +12,30 @@
 
       <table class="item-detail-table">
         <tbody>
-          <tr><th>案件番号</th><td>{{ item.caseNo }}</td></tr>
-          <tr><th>No.</th><td>{{ item.no }}</td></tr>
-          <tr><th>リスト番号</th><td>{{ item.listNo }}</td></tr>
-          <tr><th>商品名</th><td>{{ item.name }}</td></tr>
-          <tr><th>型番</th><td>{{ item.model }}</td></tr>
-          <tr><th>メーカー名</th><td>{{ item.maker }}</td></tr>
-          <tr><th>購入年月日</th><td>{{ item.purchaseDate }}</td></tr>
-          <tr><th>製造番号</th><td>{{ item.serialNo }}</td></tr>
-          <tr><th>付属品</th><td>{{ item.accessories }}</td></tr>
-          <tr><th>備考</th><td>{{ item.memo }}</td></tr>
+          <tr>
+            <th>案件番号</th><td>{{ item.caseNo }}</td>
+            <th>No.</th><td>{{ String(item.no).padStart(4, '0') }}</td>
+            <th>リスト番号</th><td>{{ item.listNo }}</td>
+        </tr>
+          <tr><th>商品名</th><td colspan="5">{{ item.name }}</td></tr>
+          <tr><th>型番</th><td colspan="5">{{ item.model }}</td></tr>
+          <tr><th>メーカー名</th><td colspan="5">{{ item.maker }}</td></tr>
+          <tr><th>購入年月日</th><td colspan="5">{{ item.purchaseDate }}</td></tr>
+          <tr><th>製造番号</th><td colspan="5">{{ item.serialNo }}</td></tr>
+          <tr><th>付属品</th><td colspan="5">{{ item.accessories }}</td></tr>
+          <tr class="high-row"><th>備考</th><td colspan="5">{{ item.memo }}</td></tr>
           <tr>
             <th>数量</th>
-<td>{{ form.qty }}</td>
-
-          </tr>
-          <tr>
-            <th>希望数量</th>
-            <td>
-    <input type="text" v-model="form.desiredQty" />
-            </td>
-          </tr>
-          <tr>
-            <th>入札額</th>
+<td >{{ form.qty }}</td> 
+           <th>入札額</th>
             <td>
     <input type="text" v-model="form.bidPrice" />
             </td>
+            <th>入札額小計</th><td colspan="5">{{ subtotal.toLocaleString() }} 円</td>
           </tr>
-          <tr><th>入札額小計</th><td>{{ subtotal.toLocaleString() }} 円</td></tr>
-          <tr>
+          <tr class="high-row">
             <th>入札備考</th>
-            <td><input type="text" v-model="form.bidMemo" /></td>
+            <td colspan="5"><input type="text" v-model="form.bidMemo" /></td>
           </tr>
         </tbody>
       </table>
@@ -59,6 +52,7 @@ import Sidebar from '@/components/Sidebar.vue'
 import { useRoute } from 'vue-router'
 import { reactive, computed } from 'vue'
 
+
 // モック（APIで取得する内容）
 const item = reactive({
   caseNo: '07334',
@@ -72,7 +66,6 @@ const item = reactive({
   accessories: 'ケーブル',
   memo: '多少の傷あり',
   qty: 10,
-  desiredQty: 3,
   bidPrice: '',
   bidMemo: ''
 })
@@ -86,13 +79,12 @@ const form = reactive({
 })
 
 // 計算フィールド
-const subtotal = computed(() => form.bidPrice * form.desiredQty)
+const subtotal = computed(() => form.bidPrice * form.qty)
 
 const submitBid = () => {
   const payload = {
     caseNo: item.caseNo,
     itemNo: item.no,
-    desiredQty: form.desiredQty,
     bidPrice: form.bidPrice,
     bidMemo: form.bidMemo
   }
@@ -102,6 +94,9 @@ const submitBid = () => {
 
   alert('入札内容を送信しました。')
 }
+
+const route = useRoute()
+const id = route.params.id
 </script>
 
 <style scoped>
@@ -135,14 +130,20 @@ const submitBid = () => {
   color: #ffffff;
   }
   td{
-    min-width: 300px;
+    min-width: 150px;
   }
   
   input {
     width: 80%;
     padding: 6px;
     font-size: 0.9em;
+    height: 50%;
   }
+  
+  tr.high-row {
+  height: 110px;
+}
+
 }
 
 .back-button {

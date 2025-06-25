@@ -4,8 +4,16 @@
     <Sidebar />
     <main class="main">
       <h2 class="title">入札会詳細（ID: {{ id }}）</h2>
+<a
+  v-if="item && item.imageUrl"
+  :href="item.imageUrl"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="photo-button"
+>
+  写真を見る
+</a>
 
-      <!-- 入札アイテム表 -->
       <section>
         <table class="bids-table">
           <thead>
@@ -17,9 +25,7 @@
               <th>最低入札額（円）</th>
               <th>入札額（円）</th>
               <th>数量</th>
-              <th>希望数量</th>
               <th>入札備考</th>
-              <th>写真情報</th>
               <th>明細へ</th>
             </tr>
           </thead>
@@ -30,19 +36,18 @@
               <td>{{ String(item.caseNo).padStart(5, "0") }}-{{ String(idx + 1).padStart(4, "0") }}</td>
               <td>{{ item.maker }}｜{{ item.model }}</td>
               <td class="text-right">{{ item.minPrice.toLocaleString() }}</td>
-              <td>
-                <input type="number" v-model.number="item.bidPrice" class="w-full border border-gray-400 rounded px-2 py-1 text-right" min="0" />
-              </td>
+ <td>
+  <input
+    type="text"
+    v-model="item.bidPrice"
+    class="w-full border border-gray-400 rounded px-2 py-1 text-right"
+    placeholder="金額を入力"
+  />
+</td>
               <td class="text-right">{{ item.qty }}</td>
-              <td>
-                <input type="number" v-model.number="item.desiredQty" class="w-full border border-gray-400 rounded px-2 py-1 text-right" :max="item.qty" min="0" />
-              </td>
               <td class="py-2 px-3">
                 <input type="text" v-model="item.memo" class="w-full border border-gray-400 rounded px-2 py-1" placeholder="備考を入力" />
               </td>
-              <td class="py-2 px-3 text-center">
-  <button class="photo-button" @click="showPhoto(item.imageUrl)">写真を見る</button>
-</td>
               <td class="py-2 px-3 text-center">
                 <NuxtLink :to="`/customer/auction/${id}-detail?item=${item.id}`" class="details-link">明細へ</NuxtLink>
               </td>
@@ -50,26 +55,31 @@
           </tbody>
         </table>
       </section>
+<section style="margin-top: 30px; margin-left: 120px;">
+  <p><strong>小計金額：</strong>{{ totalSubtotal.toLocaleString() }} 円</p>
+</section>
+
       <section style="margin-top: 30px; margin-left: 120px;">
   <button @click="submitBids" class="submit-button">入札を確定する</button>
 </section>
-
     </main>
   </div>
   
-  <!-- モーダル -->
-<div v-if="photoModal" class="modal-overlay" @click.self="closePhoto">
-  <div class="modal-content">
-    <img :src="photoUrl" alt="商品画像" />
-    <button @click="closePhoto">閉じる</button>
-  </div>
-</div>
 
 </template>
 
 <script setup>
 import { reactive } from "vue";
 import { useRoute } from "vue-router";
+import { computed } from 'vue'
+
+const totalSubtotal = computed(() =>
+  auction.items.reduce((sum, item) => {
+    const price = Number(item.bidPrice) || 0
+    const qty = Number(item.qty) || 0
+    return sum + price * qty
+  }, 0)
+)
 
 const route = useRoute();
 const id = route.params.id;
@@ -89,7 +99,6 @@ const auction = reactive({
       qty: 10,
       desiredQty: null,
       memo: "",
-       imageUrl: "/images/photo1.jpg",
     },
     {
       id: 2,
@@ -103,7 +112,6 @@ const auction = reactive({
       qty: 5,
       desiredQty: null,
       memo: "",
-      imageUrl: "/images/photo1.jpg",
     },
   ],
 });
@@ -130,18 +138,7 @@ const submitBids = () => {
   alert('入札を送信しました！')
 }
 
-const photoModal = ref(false)
-const photoUrl = ref('')
 
-const showPhoto = (url) => {
-  photoUrl.value = url
-  photoModal.value = true
-}
-
-const closePhoto = () => {
-  photoModal.value = false
-  photoUrl.value = ''
-}
 
 
 </script>
@@ -230,32 +227,8 @@ color: #ffffff;
 border-radius: 7px;
 font-size: 0.857em;
 line-height: 1;
-}
+margin-left: 120px;
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
 }
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
-  text-align: center;
-}
-.modal-content img {
-  max-width: 100%;
-  max-height: 80vh;
-}
-
 
 </style>
