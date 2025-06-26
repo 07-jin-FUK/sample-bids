@@ -36,7 +36,6 @@
         <p v-else class="no-data">現在、仮落札している入札会はありません。</p>
       </section>
     </main>
-    <Footer />
   </div>
 </template>
 

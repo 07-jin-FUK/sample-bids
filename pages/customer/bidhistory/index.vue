@@ -1,37 +1,39 @@
-// File: BiddingProgress/index.vue
 <template>
   <div class="page-wrap">
     <Header />
-      <Sidebar />
+    <Sidebar />
     <main class="main">
-      <h2 class="title">過去の入札履歴</h2>
-
-      <table class="history-table" v-if="bidHistory.length">
-        <thead>
-          <tr>
-            <th>案件ID</th>
-            <th>案件名</th>
-            <th>入札日</th>
-            <th>結果</th>
-            <th>詳細</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="bid in bidHistory" :key="bid.id">
-            <td>{{ bid.id }}</td>
-            <td>{{ bid.title }}</td>
-            <td>{{ bid.date }}</td>
-            <td :class="{
-              'won': bid.result === '全落札',
-              'partial': bid.result === '一部落札',
-              'lost': bid.result === '落選'
-            }">{{ bid.result }}</td>
-            <td><NuxtLink :to="`/customer/bidhistory/${bid.id}`" class="link-button">詳細</NuxtLink></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p v-else class="no-data">過去の入札履歴はありません。</p>
+      <section class="section-block">
+        <h2 class="title">落札履歴</h2>
+     <table v-if="openBiddingList.length" class="bids-table">
+          <thead>
+            <tr>
+              <th>案件番号</th>
+              <th>カテゴリー</th>
+              <th>入札会名称</th>
+              <th>締切日時</th>
+              <th>落札数</th>
+              <th>詳細</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="bid in openBiddingList" :key="bid.id">
+              <td>{{ bid.projectId }}</td>
+    <td>{{ bid.category }}</td>
+              <td>{{ bid.title }}</td>
+              <td>{{ bid.endDate }}</td>
+<td>
+  {{
+    bid.items.filter(item => item.status === 'confirmed').length
+  }} / {{ bid.items.length }} 件
+</td>
+              <td>
+                <NuxtLink :to="`/customer/bidhistory/${bid.id}`" class="link-button">詳細</NuxtLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
     <Footer />
   </div>
@@ -39,29 +41,51 @@
 
 <script setup>
 import Header from '~/components/Header.vue'
+import Sidebar  from '~/components/Sidebar.vue'  
 import Footer from '~/components/Footer.vue'
 
-// 仮のダミーデータ（将来的にAPIで取得）
-const bidHistory = [
+const allBids = [
   {
-    id: 201,
-    title: '5月度 配管資材入札',
-    date: '2025-05-10',
-    result: '全落札'
+    id: 301,
+    projectId: '07334',
+    category: "電気計測器",
+    title: '6月度 建材入札',
+    endDate: "2025年06月10日 17:00",
+    items: [
+  { id: 1, status: 'confirmed' },
+  { id: 2, status: 'losing' },
+  { id: 3, status: 'none' },
+    ]
   },
   {
-    id: 202,
-    title: '4月度 電気資材入札',
-    date: '2025-04-05',
-    result: '一部落札'
-  },
-  {
-    id: 203,
-    title: '3月度 文具入札',
-    date: '2025-03-01',
-    result: '落選'
+    id: 302,
+    projectId: '07335',
+    category: "電気計測器",
+    title: '7月度 電設資材入札',
+    endDate: "2025年07月30日 17:00",
+    items: [
+  { id: 1, status: 'confirmed' },
+  { id: 2, status: 'losing' },
+  { id: 3, status: 'none' },
+    { id: 4, status: 'confirmed' },
+  { id: 5, status: 'losing' },
+  { id: 6, status: 'none' },
+    { id: 7, status: 'confirmed' },
+  { id: 8, status: 'losing' },
+  { id: 9, status: 'none' },
+    ]
   }
 ]
+
+
+const confirmedBiddingList = allBids.filter(bid =>
+  bid.items.some(item => item.status === 'confirmed')
+)
+
+// テンプレートで使う名前はこれに統一
+const openBiddingList = confirmedBiddingList
+
+
 </script>
 
 <style scoped lang="scss">
@@ -74,23 +98,27 @@ const bidHistory = [
 .main {
   flex: 1;
   padding: 40px;
-  max-width: 1000px;
   margin: auto;
+}
+
+.section-block {
+  margin-bottom: 60px;
 }
 
 .title {
   margin-bottom: 30px;
-  text-align: center;
+  text-align: left;
+  font-size: 0.875em;
 }
 
-.history-table {
+.bids-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
 }
 
-.history-table th,
-.history-table td {
+.bids-table th,
+.bids-table td {
   border: 0.3px solid #707070;
   text-align: left;
   vertical-align: middle;
@@ -99,39 +127,25 @@ const bidHistory = [
     font-size: 0.875em;
 }
 
-.history-table td {
+
+.bids-table td {
 color: #1F1F1F;
 }
 
-.history-table th {
+.bids-table th {
   background-color: #000000;
   color: #ffffff;
 }
 
-.history-table tr:hover {
+.bids-table tr:hover {
   background-color: #f0f8ff;
-}
-
-.won {
-  color: red;
-  font-weight: bold;
-}
-
-.partial {
-  color: orange;
-  font-weight: bold;
-}
-
-.lost {
-  color: black;
-  font-weight: bold;
 }
 
 .no-data {
   text-align: center;
   font-size: 1rem;
   color: #888;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .link-button {

@@ -11,8 +11,6 @@
         <!-- <li><NuxtLink to="/customer/bidhistory">入札履歴</NuxtLink></li> -->
         <li><NuxtLink to="/customer/profileedit">アカウント情報</NuxtLink></li>
         <li><NuxtLink to="/customer/billing">ご請求内容一覧</NuxtLink></li>
-
-        
         <li><a href="#" @click.prevent="handleLogout">ログアウト</a></li>
       </ul>
     </nav>
