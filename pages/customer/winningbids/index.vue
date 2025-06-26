@@ -88,7 +88,6 @@ const openBiddingList = allBids.filter(bid =>
 .main {
   flex: 1;
   padding: 40px;
-  max-width: 1000px;
   margin: auto;
 }
 

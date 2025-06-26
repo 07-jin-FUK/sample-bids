@@ -113,7 +113,7 @@ const id = route.params.id
   position: relative;
 }
 .item-detail-table {
-    margin: 0 auto;
+  margin: 0 auto;
   border-collapse: collapse;
   th, td {
   border: 0.3px solid #707070;

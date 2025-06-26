@@ -49,7 +49,7 @@
                 <input type="text" v-model="item.memo" class="w-full border border-gray-400 rounded px-2 py-1" placeholder="備考を入力" />
               </td>
               <td class="py-2 px-3 text-center">
-                <NuxtLink :to="`/customer/auction/${id}-detail?item=${item.id}`" class="details-link">明細へ</NuxtLink>
+                <NuxtLink :to="`/customer/auction/${id}/detail?item=${item.id}`" class="details-link">明細へ</NuxtLink>
               </td>
             </tr>
           </tbody>

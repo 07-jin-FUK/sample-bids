@@ -12,10 +12,11 @@
               <th>No.</th>
               <th>案件番号</th>
               <th>商品名</th>
-              <th>落札金額（円）</th>
+              <th>仮落札金額（円）</th>
               <th>管理者メッセージ</th>
               <th>提示金額</th>
               <th>対応選択</th>
+              <th>詳細へ</th>
             </tr>
           </thead>
         <tbody>
@@ -38,8 +39,10 @@
   <option value="キャンセル">キャンセル</option>
   <option value="交渉">交渉</option>
 </select>
-
       </td>
+      <td>
+  <NuxtLink :to="`/customer/winningbids/${item.id}/detail`">詳細</NuxtLink>
+</td>
     </tr>
 
     <!-- 交渉が選択された場合のみ表示 -->
@@ -104,11 +107,9 @@ const auction = reactive({
       name: 'DTV MULTI SIGNAL GENERATOR ',
       price: 850000,
       status: 'winning',
-      adminMessage: '7月上旬予定です',
-      suggestedPrice: null,
+      adminMessage: '',
+      suggestedPrice: '',
       userResponse: '',
-      negotiationPrice: null,
-      negotiationMemo: ''
     },
     {
       id: 2,
@@ -116,11 +117,9 @@ const auction = reactive({
       name: 'DTV信号発生器',
       price: 950000,
       status: 'winning',
-      adminMessage: 'ボディに少々の傷あり',
-      suggestedPrice: 900000,
+      adminMessage: '',
+      suggestedPrice: '',
       userResponse: '',
-      negotiationPrice: null,
-      negotiationMemo: ''
     },
   ]
 })
@@ -203,9 +202,7 @@ const payload = winningItems.value.map(item => ({
   .negotiation-row td {
     background: #f9f9f9;
   }
-
-
-
+  
   .negotiation-fields input {
     padding: 6px 10px;
     border: 1px solid #aaa;
@@ -222,8 +219,6 @@ const payload = winningItems.value.map(item => ({
     width: 90%;
     height: 50px;
   }
-  
-  
 }
 
 .responded {
