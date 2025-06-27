@@ -103,8 +103,6 @@
         </p>
       </div>
     </div>
-
-    <Footer />
   </div>
 </template>
 

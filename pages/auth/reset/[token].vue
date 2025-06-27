@@ -9,7 +9,6 @@
           <br />
           <strong>{{ email }}</strong>
         </p>
-
         <form class="form" @submit.prevent="handleReset">
           <div class="form-content">
             <label class="label" for="newPassword">新しいパスワード</label>
@@ -19,14 +18,12 @@
             <label class="label" for="newPassword">確認用</label>
         <input type="password" v-model="confirmPassword" required />
           </div>
-
           <div class="button-center">
             <button type="submit" class="button">再設定する</button>
           </div>
         </form>
       </div>
     </main>
-    <Footer />
   </div>
 </template>
 

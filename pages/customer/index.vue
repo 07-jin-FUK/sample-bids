@@ -11,6 +11,8 @@ import Sidebar from '~/components/Sidebar.vue'
 import AuctionIndex from '~/pages/customer/auction/index.vue' // 入札会一覧を直接読み込み
 
 import { ref } from 'vue'
+const userName = ref('')
+
 
 onMounted(async () => {
   const token = useCookie('auth_token') // または useStorage

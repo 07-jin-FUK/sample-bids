@@ -37,27 +37,55 @@
         </div>
       </form>
     </main>
-    <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
+import Sidebar from '~/components/Sidebar.vue'
 
-// 仮のダミープロフィールデータ（本番ではAPI取得で初期化）
-const profile = ref({
-  company: '株式会社FLAG',
-  person: 'フラッグ',
-  email: 'taro@example.com',
-  phone: '03-1234-5678',
-  address: '東京都新宿区西新宿1-1-1'
+
+import { onMounted } from 'vue'
+import { useCookie } from '#app' // Nuxt3でCookie取得
+
+onMounted(async () => {
+  const token = useCookie('auth_token')
+
+  if (token.value) {
+    const { data, error } = await useFetch('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      }
+    })
+
+    if (data.value) {
+      profile.value = {
+        company: data.value.company,
+        person: data.value.person,
+        email: data.value.email,
+        phone: data.value.phone,
+        address: data.value.address,
+      }
+    }
+  }
 })
 
-const handleSubmit = () => {
-  console.log('更新されたプロフィール:', profile.value)
-  alert('（仮）プロフィール情報を保存しました')
+const handleSubmit = async () => {
+  const token = useCookie('auth_token')
+  const { error } = await useFetch('/auth/profile/update', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token.value}`
+    },
+    body: profile.value
+  })
+
+  if (error.value) {
+    alert('プロフィールの保存に失敗しました')
+  } else {
+    alert('プロフィールを保存しました')
+  }
 }
 </script>
 

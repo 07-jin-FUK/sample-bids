@@ -33,7 +33,6 @@
 <script setup>
 import { ref } from 'vue'
 import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
 import { useRouter } from 'vue-router' // 追加
 
 const router = useRouter() // 追加
