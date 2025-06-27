@@ -2,17 +2,32 @@
     <Header />
     <Sidebar />
     <AuctionIndex />
-    <Footer />
+
 </template>
 
 <script setup>
 import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
 import Sidebar from '~/components/Sidebar.vue'
 import AuctionIndex from '~/pages/customer/auction/index.vue' // 入札会一覧を直接読み込み
 
 import { ref } from 'vue'
-const userName = ref('フラッグ') // 本番はログイン情報から取得
+
+onMounted(async () => {
+  const token = useCookie('auth_token') // または useStorage
+
+  if (token.value) {
+    const { data, error } = await useFetch('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      }
+    })
+
+    if (data.value) {
+      userName.value = data.value.name
+    }
+  }
+})
+
 </script>
 
 <style scoped lang="scss">

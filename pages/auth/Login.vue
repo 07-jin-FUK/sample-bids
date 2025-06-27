@@ -27,7 +27,6 @@
         <p class="forget-link"><NuxtLink to="/auth/forgetpassword" >パスワードお忘れの方はこちら</NuxtLink></p>
       </div>
     </main>
-    <Footer />
   </div>
 </template>
 
@@ -40,11 +39,32 @@ import { useRouter } from 'vue-router' // 追加
 const router = useRouter() // 追加
 const email = ref('')
 const password = ref('')
+const loginId = ref('')
 
-const handleLogin = () => {
-  console.log('ログイン処理（仮）', email.value, password.value)
-  router.push('/customer') 
+const handleLogin = async () => {
+  try {
+    const { data, error } = await useFetch('/auth/login', {
+      method: 'POST',
+      body: { login_id: loginId.value, password: password.value }
+    })
+
+    if (error.value) {
+      alert('ログインに失敗しました。IDとパスワードを確認してください。')
+      return
+    }
+
+    // トークン保存
+    const token = data.value.token
+    localStorage.setItem('auth_token', token)
+
+    // 顧客情報などをPiniaで管理するならここでセット
+
+    router.push('/customer')
+  } catch (err) {
+    console.error('ログイン処理エラー', err)
+    alert('エラーが発生しました。')
   }
+}
 </script>
 
 <style lang="scss" scoped>

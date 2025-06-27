@@ -38,18 +38,58 @@ import Footer from '~/components/Footer.vue'
 
 const route = useRoute()
 const router = useRouter()
+const email = ref('')
 const token = route.params.token
 
-// ✅ ダミーデータとして仮に取得済みとする（実際はAPIで取得）
-const email = ref('dummy@example.com')
-const newPassword = ref('')
+onMounted(async () => {
+  try {
+    const { data, error } = await useFetch(`/auth/password/token-info`, {
+      method: 'POST',
+      body: { token }
+    })
 
-// パスワード再設定処理（ダミー）
+    if (error.value) {
+      alert('トークンが無効または期限切れです')
+      router.push('/auth/forgetpassword')
+      return
+    }
+
+    email.value = data.value.contact_email
+  } catch (err) {
+    console.error('トークン情報取得エラー', err)
+    alert('通信エラーが発生しました')
+  }
+})
+const newPassword = ref('')
+const confirmPassword = ref('')
+
 const handleReset = async () => {
-  console.log('再設定トークン:', token)
-  console.log('新パスワード:', newPassword.value)
-  alert('パスワードを再設定しました（ダミー）')
-  router.push('/auth/login')
+  if (newPassword.value !== confirmPassword.value) {
+    alert('パスワードが一致しません。もう一度確認してください。')
+    return
+  }
+
+  try {
+    const { data, error } = await useFetch('/auth/password/reset', {
+      method: 'POST',
+      body: {
+        token: token,
+        password: newPassword.value
+      }
+    })
+
+    if (error.value) {
+      alert('パスワードの再設定に失敗しました。リンクが無効か、期限切れの可能性があります。')
+      return
+    }
+
+    alert('パスワードを再設定しました。ログイン画面へ移動します。')
+    router.push('/auth/login')
+
+  } catch (err) {
+    console.error('再設定エラー:', err)
+    alert('通信エラーが発生しました。')
+  }
 }
 </script>
 

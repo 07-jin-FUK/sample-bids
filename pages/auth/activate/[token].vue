@@ -55,8 +55,6 @@
         </p>
       </div>
     </div>
-
-    <Footer />
   </div>
 </template>
 
@@ -64,7 +62,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
+
 
 // URLからtokenを取得
 const route = useRoute()
@@ -98,30 +96,37 @@ const invoicePerson = ref('')
 const invoiceTitle = ref('')
 const showModal = ref(false)
 
-const handleSubmit = () => {
-  console.log('本登録情報:', {
-    name: name.value,
-    kana: kana.value,
-    zipcode: zipcode.value,
-    address: address.value,
-    phone: phone.value,
-    fax: fax.value,
-    needsInvoice: needsInvoice.value,
-    invoiceInfo: needsInvoice.value === 'yes' ? {
-      zipcode: invoiceZipcode.value,
-      address: invoiceAddress.value,
-      department: invoiceDepartment.value,
-      phone: invoicePhone.value,
-      fax: invoiceFax.value,
-      person: invoicePerson.value,
-      title: invoiceTitle.value,
-    } : null
-  })
-  showModal.value = true
-  setTimeout(() => {
-    showModal.value = false
-    router.push('/auth/login')
-  }, 3000)
+const handleSubmit = async () => {
+  try {
+    const { data, error } = await useFetch('/auth/activate', {
+      method: 'POST',
+      body: {
+        token, // ← URLから取得済み
+        company_name: name.value,
+        contact_name: contact.value,
+        contact_email: email.value,
+        contact_position: job.value,
+        contact_department: department.value,
+        postal_code: zipcode.value,
+        address: address.value,
+        phone: phone.value
+      }
+    })
+
+    if (error.value) {
+      alert('登録に失敗しました。入力内容をご確認ください。')
+      return
+    }
+
+    showModal.value = true
+    setTimeout(() => {
+      showModal.value = false
+      router.push('/auth/login')
+    }, 3000)
+  } catch (err) {
+    console.error('本登録エラー', err)
+    alert('通信エラーが発生しました。')
+  }
 }
 </script>
 

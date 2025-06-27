@@ -9,7 +9,7 @@
            <span>登録したメールアドレスを入力してください。</span>
         </p>
 
-        <form class="form" @submit.prevent="handleLogin">
+       <form @submit.prevent="handleResetRequest">
           <div class="form-content">
             <label class="label" for="email">メールアドレス</label>
             <input type="email" id="email" v-model="email" required />
@@ -35,11 +35,25 @@ const router = useRouter() // 追加
 const email = ref('')
 const password = ref('')
 
+const handleResetRequest = async () => {
+  try {
+    const { data, error } = await useFetch('/auth/password/remind', {
+      method: 'POST',
+      body: {
+        contact_email: email.value
+      }
+    })
 
-const handleLogin = () => {
-  // ダミーのトークンを作成
-  const dummyToken = 'abc123token'
-  router.push(`/auth/reset/${dummyToken}`)
+    if (error.value) {
+      alert('送信に失敗しました。メールアドレスをご確認ください。')
+      return
+    }
+
+    alert('パスワードリセット用のURLを送信しました。メールをご確認ください。')
+  } catch (err) {
+    console.error('リマインダ送信エラー:', err)
+    alert('通信エラーが発生しました。')
+  }
 }
 </script>
 

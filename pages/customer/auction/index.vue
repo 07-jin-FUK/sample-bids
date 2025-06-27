@@ -17,7 +17,7 @@
   <span class="checkmark-indicator">✓</span>
 </th>
     <th>状態</th>
-    <th>入札方法</th>
+    <th>落札方法</th>
     <th>案件番号</th>
     <th>カテゴリー</th>
     <th>入札会名称</th>
@@ -73,7 +73,7 @@ const mockBids = ref([
   {
     id: 101,
     status: '準備中',
-    method: '一括入札',
+    method: '一括落札',
     projectId: '07334',
     category: "電気計測器",
     type: "複数品",
@@ -85,7 +85,7 @@ const mockBids = ref([
   {
     id: 102,
     status: '開催中',
-    method: '個別入札',
+    method: '個別落札',
     projectId: '07332',
     category: "OAその他",
     type: "単品",
@@ -97,7 +97,7 @@ const mockBids = ref([
   {
     id: 103,
     status: '開催中',
-    method: '個別入札',
+    method: '個別落札',
     projectId: '07330',
     category: "分析機器",
     name: "分析系入札会",

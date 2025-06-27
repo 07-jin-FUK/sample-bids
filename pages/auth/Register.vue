@@ -119,15 +119,34 @@ const password = ref("");
 const showModal = ref(false);
 const router = useRouter();
 
-const handleRegister = () => {
-  console.log("仮登録処理（仮）", email.value, password.value);
-  showModal.value = true;
+const handleRegister = async () => {
+  try {
+    const { data, error } = await useFetch('/auth/register', {
+      method: 'POST',
+      body: {
+        contact_email: email.value,
+        password: password.value
+      }
+    })
 
-  setTimeout(() => {
-    showModal.value = false;
-    router.push("/auth/activate/dummytoken123");
-  }, 3000); // 3秒後に遷移
-};
+    if (error.value) {
+      alert('仮登録に失敗しました。入力内容をご確認ください。')
+      return
+    }
+
+    showModal.value = true
+
+    // 認証メール送信案内のモーダルを表示してから画面遷移
+    setTimeout(() => {
+      showModal.value = false
+      router.push('/auth/activate') // token付きURLはメールに記載される前提
+    }, 3000)
+
+  } catch (err) {
+    console.error('仮登録エラー', err)
+    alert('通信エラーが発生しました。')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
