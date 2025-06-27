@@ -69,77 +69,61 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
-import { useRoute } from "vue-router";
-import { computed } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
-const totalSubtotal = computed(() =>
-  auction.items.reduce((sum, item) => {
-    const price = Number(item.bidPrice) || 0
-    const qty = Number(item.qty) || 0
-    return sum + price * qty
-  }, 0)
-)
+const route = useRoute()
+const id = route.params.id
 
-const route = useRoute();
-const id = route.params.id;
+// モックモードかどうか（trueならローカルデータ、falseならAPI）
+const mockMode = true
 
 const auction = reactive({
   id,
-  items: [
-    {
-      id: 1,
-      listNo: "1",
-      caseNo: "07334",
-      name: "DTV MULTI SIGNAL GENERATOR （BS信号発生器）",
-      maker: "営電",
-      model: "MSR3100A",
-      minPrice: 0,
-      bidPrice: null,
-      qty: 10,
-      desiredQty: null,
-      memo: "",
-    },
-    {
-      id: 2,
-      listNo: "2",
-      caseNo: "07334",
-      name: "スペクトラムアナライザ",
-      maker: "アドバンテスト",
-      model: "R3267",
-      minPrice: 1000,
-      bidPrice: null,
-      qty: 5,
-      desiredQty: null,
-      memo: "",
-    },
-  ],
-});
+  items: []
+})
 
-const detailLink = (item) => `/customer/auction/${id}/item/${item.id}`;
-
-const submitBids = () => {
-  const payload = auction.items.map(item => ({
-    id: item.id,
-    bidPrice: item.bidPrice,
-    desiredQty: item.desiredQty,
-    memo: item.memo,
-  }))
-
-  // ここでAPIに送る（仮で表示）
-  console.log('送信データ:', payload)
-
-  // 実際のAPI送信は例↓
-  // await $fetch('/api/submit-bids', {
-  //   method: 'POST',
-  //   body: payload,
-  // })
-
-  alert('入札を送信しました！')
-}
-
-
-
+onMounted(async () => {
+  if (mockMode) {
+    // モックデータをそのまま使う
+    auction.items = [
+      {
+        id: 1,
+        listNo: "1",
+        caseNo: "07334",
+        name: "DTV MULTI SIGNAL GENERATOR （BS信号発生器）",
+        maker: "営電",
+        model: "MSR3100A",
+        minPrice: 0,
+        bidPrice: null,
+        qty: 10,
+        desiredQty: null,
+        memo: "",
+      },
+      {
+        id: 2,
+        listNo: "2",
+        caseNo: "07334",
+        name: "スペクトラムアナライザ",
+        maker: "アドバンテスト",
+        model: "R3267",
+        minPrice: 1000,
+        bidPrice: null,
+        qty: 5,
+        desiredQty: null,
+        memo: "",
+      },
+    ]
+  } else {
+    // APIから取得（仮に `/api/auctions/:id`）
+    const { data, error } = await useFetch(`/api/auctions/${id}`)
+    if (data.value) {
+      auction.items = data.value.items
+    } else {
+      console.error('取得失敗:', error)
+    }
+  }
+})
 
 </script>
 

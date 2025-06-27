@@ -31,7 +31,6 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
 
 const route = useRoute()
 const router = useRouter()
